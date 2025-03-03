@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FinOclik Chat</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #ffffff;
+            background-image: url('/static/FinOclik ChatBot 1.0.png'); /* Update the path if needed */
+            background-size: cover;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .chat-container {
+            max-width: 500px;
+            width: 100%;
+            margin-top: 50px;
+            background-color: #becfcd;
+            border: 5px solid #879090;
+            border-radius: 10px;
+            box-shadow: 0 0 100px rgba(0, 0, 0, 0.1);
+        }
+
+        .chat-header {
+            background-color: #333;
+            color: #EAECEE;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .chat-header h2 {
+            margin: 0;
+            font-size: 24px;
+        }
+
+        .chat-body {
+            padding: 10px;
+        }
+
+        .chat-messages {
+            margin-bottom: 5px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .message-container {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 10px;
+        }
+
+        .user-message,
+        .chatbot-message {
+            display: flex;
+            max-width: 90%;
+            border-radius: 5px;
+            padding: 10px;
+            margin-bottom: 5px;
+        }
+
+        .user-message {
+            background-color: #e4e95f;
+            border: 1px solid #fdd40a;
+            margin-left: auto;
+        }
+
+        .chatbot-message {
+            background-color: #e0b587;
+            border: 1px solid #f88f1e;
+            margin-right: auto;
+        }
+
+        .user-icon,
+        .chatbot-icon {
+            margin-right: 10px;
+        }
+
+        .user-message p,
+        .chatbot-message p {
+            margin: 0;
+        }
+
+        .user-input form {
+            display: flex;
+        }
+
+        .user-input input[type="text"] {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #cccccc;
+            border-radius: 5px 0 0 5px;
+        }
+
+        .user-input input[type="submit"] {
+            background-color: #0550a163;
+            color: #032f5e7a;
+            padding: 10px;
+            border: 1px solid #15385e;
+            border-radius: 0 5px 5px 0;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="chat-container">
+        <div class="chat-header">
+            <h2>Let's Chat!</h2>
+        </div>
+        <div class="chat-body">
+            <div class="chat-messages">
+                {% for entry in conversation_history %}
+                    <div class="message-container">
+                        {% if entry.user_input %}
+                            <div class="user-message">
+                                <i class="fas fa-user user-icon"></i>
+                                <p>{{ entry.user_input }}</p>
+                            </div>
+                        {% endif %}
+                        {% if entry.chatbot_response %}
+                            <div class="chatbot-message">
+                                <i class="fas fa-robot chatbot-icon"></i>
+                                <p>{{ entry.chatbot_response }}</p>
+                            </div>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="user-input">
+            <form method="post">
+                <input type="text" name="user_input" id="user_input" placeholder="Type your message..." required autofocus>
+                <input type="submit" value="Send">
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function scrollToBottom() {
+            var chatContainer = document.querySelector('.chat-body .chat-messages');
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+
+        window.onload = function () {
+            scrollToBottom();
+        }
+
+        document.querySelector('form').addEventListener('submit', function () {
+            setTimeout(scrollToBottom, 0);
+        });
+    </script>
+</body>
+
+</html>

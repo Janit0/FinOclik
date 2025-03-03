@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatbot UI</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+        }
+        /* Main container */
+        .container {
+            display: flex;
+            width: 100%;
+            height: 100%;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            border-radius: 10px;
+        }
+        @media screen and (max-width: 1600px) {
+            .representations-container {
+                max-width: 90%; /* Adjust as needed */
+            }
+        }
+
+        @media screen and (max-width: 1440px) {
+            .representations-container {
+                max-width: 80%; /* Adjust as needed */
+            }
+        }
+        /* Representations container */
+        .representations-container {
+            width: calc(100% - 200px); /* Subtract the width of the chatbot container */
+            background-color: #f0f0f0;
+            background-image: url('/static/BackgroundForStockAnalysis.png'); /* Update the path if needed */
+            background-size: cover;
+            padding: 20px;
+            overflow-y: auto;
+            height: 180vh;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            display: flex; /* Add display flex */
+            flex-direction: column; /* Add flex direction */
+        }
+
+        /* Chatbot container */
+        .chatbot-container {
+            width: 1000px; /* Adjust the width as needed */
+            max-width: 500px; /* Set maximum width to avoid stretching on large screens */
+            min-width: 300px; /* Set minimum width to ensure readability on small screens */
+            background-color: #becfcd;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 0 100px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+        }
+        
+        .chat-header {
+            background-color: #333;
+            color: #EAECEE;
+            padding: 10px;
+            text-align: center;
+        }
+
+        /* Chat messages container */
+        .chat-messages-container {
+            overflow-y: auto;
+            max-height: 300px; /* Adjust height as needed */
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* User input message box */
+        .user-message-box {
+            background-color: #eff5f5;
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 5px;
+            align-self: flex-end; /* Align to the right */
+            border: 1px solid #ccc; /* Add border */
+        }
+        
+        .message-container {
+            background-color: #f0f0f0;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            word-wrap: break-word; /* Wrap long words */
+            overflow: hidden; /* Hide overflow content */
+        }
+        .user-message,
+        .chatbot-message {
+            display: flex;
+            max-width: 100%;
+            border-radius: 5px;
+            padding: 5px;
+            margin-bottom: 10px;
+            flex-direction: column;
+            height: auto; /* Allow height to adjust based on content */
+        }
+
+        .user-message {
+            background-color: #e4e75f;
+            border: 1px solid #fdd40a;
+            width: 30%;
+            max-width: 30%;
+        }
+
+        .chatbot-message {
+            background-color: #e0b587;
+            border: 1px solid #f88f1e;
+            margin-right: auto;
+            width: 70%;
+            max-width: 70%;
+        }
+
+        .user-icon,
+        .chatbot-icon {
+            margin-right: 10px;
+        }
+        
+        .user-input form {
+            display: flex;
+        }
+
+        .user-input input[type="text"] {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #cccccc;
+            border-radius: 5px 0 0 5px;
+        }
+
+        .user-input input[type="submit"] {
+            background-color: #0550a163;
+            color: #032f5e7a;
+            padding: 10px;
+            border: 1px solid #15385e;
+            border-radius: 0 5px 5px 0;
+            cursor: pointer;
+        }
+        
+        .user-message,
+        .chatbot-message {
+            display: block; /* Change the display property to block */
+            clear: both; /* Add clear property to ensure each message starts on a new line */
+        }
+
+        .user-message p,
+        .chatbot-message p {
+            margin: 0;
+            margin-bottom: 5px;
+        }
+        /* Chatbot message box */
+        .chatbot-message-box {
+            background-color: #d4e2d6;
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 5px;
+            align-self: flex-start; /* Align to the left */
+            border: 1px solid #ccc; /* Add border */
+        }
+
+        /* User input container */
+        .user-input-container {
+            display: flex;
+            align-items: center;
+            margin-bottom: auto; /* Push to the bottom */
+        }
+        /* Message input box */
+        .message-input {
+            flex: 1; /* Take remaining space */
+            padding: 10px;
+            margin-right: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            outline: none;
+        }
+        /* Send button */
+        .send-button {
+            padding: 10px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            outline: none;
+        }
+        .loader {
+            border: 4px solid #f3f3f3; /* Light grey */
+            border-top: 4px solid #3498db; /* Blue */
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            display: none; /* Initially hidden */
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .tab-links {
+            display: flex;
+        }
+        .tab-link {
+            padding: 10px;
+            background-color: #ddd;
+            border: 1px solid #ccc;
+            border-radius: 5px 5px 0 0;
+            cursor: pointer;
+        }
+        .tab-link.active {
+            background-color: #007bff;
+            color: #fff;
+        }
+        .tab-content {
+            display: none;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 0 0 5px 5px;
+            background-color: #fff;
+            height: 100vh; /* Adjust the height as needed */
+            width: 100%; /* Set the width to 100% of the parent container */
+        }
+        
+        /* Adjustments for the images */
+        .tab-content img {
+            max-width: 100%; /* Ensure the image fits within the container */
+            max-height: 100%; /* Maintain the aspect ratio of the image */
+            width: 100%;
+            height: 100%;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        
+        table{
+            border-collape: collapse;
+            width: 30%;
+            margin: auto;
+        }
+        th, td {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 6px;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        
+        /* CSS for responsive plot containers */
+        .plot-container {
+            width: 100%; /* Set width to 100% of the parent container */
+            max-width: 800px; /* Set maximum width to avoid stretching on large screens */
+            height: auto; /* Allow height to adjust automatically based on aspect ratio */
+        }
+        
+        /* Optional: Adjust margins or paddings as needed */
+        .plot-container {
+            margin: 0 auto; /* Center the plot container horizontally */
+        }
+        .tab-link {
+        background-color: #e4e95f; /* Set a common background color for all tabs */
+        color: black; /* Set text color to white for better contrast */
+        border: none; /* Remove border for cleaner look */
+        padding: 10px 20px; /* Adjust padding as needed */
+        margin-right: 14px; /* Add margin-right to create space between tabs */
+        cursor: pointer; /* Change cursor to pointer on hover */
+        }
+        
+        .tab-info {
+            display: none; /* Hide the tab information by default */
+            position: absolute; /* Position the tab information absolutely */
+            background-color: #f9f9f9; /* Background color of the tab information */
+            border: 1px solid #ccc; /* Border of the tab information */
+            padding: 10px; /* Padding of the tab information */
+            z-index: 1; /* Ensure the tab information appears on top */
+        }
+
+        .tab-link:hover + .tab-info {
+            display: block; /* Show the tab information when hovering over the tab */
+        }
+        
+        .tab-content {
+            display: none; /* Hide the tab content by default */
+        }
+        .tab-content.active {
+            display: block; /* Show the tab content when active */
+        }
+        
+        
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Representations container -->
+        <div class="representations-container">
+            <!-- Tab links -->
+            <div id="loader" class="loader"></div>
+            <div class="tab-links">
+                <button class="tab-link" data-tab="tab1">Compound Annual Growth Rate</button>
+                <button class="tab-link" data-tab="tab2">Dividend Yielded</button>
+                
+                <button class="tab-link" data-tab="tab3">P/E Ratio</button>
+                
+                <button class="tab-link" data-tab="tab4">Gross Profit Margin</button>
+                
+                <button class="tab-link" data-tab="tab5">Net Income Margin</button>
+                
+                <button class="tab-link" data-tab="tab6">EBIT Margin</button>
+                <button class="tab-link" data-tab="tab7">EBIDTA Margin</button>
+                <button class="tab-link" data-tab="tab8">Interest Coverage Ratio</button>
+                
+            </div>
+            <!-- Tab content -->
+            <div id="tab1" class="tab">
+                <img id="plot_image_A" src="">
+            </div>
+            <div id="tab2" class="tab">
+                <img id="plot_image_B" src="">
+            </div>
+            <div id="tab3" class="tab">
+                <img id="plot_image_C" src="">
+            </div>
+            <div id="tab4" class="tab">
+                <img id="plot_image_D" src="">
+            </div>
+            <div id="tab5" class="tab">
+                <img id="plot_image_E" src="">
+            </div>
+            <div id="tab6" class="tab">
+                <img id="plot_image_F" src="">
+            </div>
+            <div id="tab7" class="tab" >
+                <img id="plot_image_G" src="">
+            </div>
+            <div id="tab8" class="tab">
+                <img id="plot_image_H" src="">
+            </div>
+
+        </div>
+        <div id="tab-info" class="tab-info"></div>
+        <!-- Chatbot container -->
+        <div class="chatbot-container">
+
+            <!-- Chatbot messages will go here -->
+            <div class="chat-container">
+                <div class="chat-header">
+                    <h2>Let's Analyze Stock</h2>
+                </div>
+                <div class="chat-body">
+        <div class="chat-messages">
+            {% for entry in chatbot_response %}
+                <div class="message-container">
+                    {% if entry.user_input_SA %}
+                        <div style="display: flex; flex-direction: row-reverse;">
+                            <div class="user-message">
+                                <i class="fas fa-user user-icon"></i>
+                                <p>{{ entry.user_input_SA }}</p>
+                            </div>
+                        </div>
+                    {% endif %}
+                    {% if entry.chatbot_response %}
+                        <div class="chatbot-message">
+                            <i class="fas fa-robot chatbot-icon"></i>
+                            <p>{{ entry.chatbot_response }}</p>
+                        </div>
+                    {% endif %}
+                </div> 
+        {% endfor %}
+    </div>
+    <div style="clear:both;"></div>
+</div>
+
+            </div>
+            <!-- User input container -->
+            <div class="user-input">
+                <form method="post">
+                    <input type="text" name="user_input_SA" id="user_input_SA" placeholder="Type your message..." required autofocus>
+                    <input type="submit" value="Analyze">
+                </form>
+            </div>
+        </div>
+    </div>
+
+     <script>
+
+
+    // Function to update image based on tab selection
+    function updateImage(tabId,loader) {
+        console.log("Updating image for tab:", tabId);
+        var plotImageA = document.getElementById('plot_image_A');
+        
+        var plotImageB = document.getElementById('plot_image_B');
+
+        var plotImageC = document.getElementById('plot_image_C');
+        
+        var plotImageD = document.getElementById('plot_image_D');
+       
+        var plotImageE = document.getElementById('plot_image_E');
+        
+        var plotImageF = document.getElementById('plot_image_F');
+       
+        var plotImageG = document.getElementById('plot_image_G');
+        
+        var plotImageH = document.getElementById('plot_image_H');
+
+        // Show the loader
+        if (loader) {
+            loader.style.display = 'inline-block';
+        }
+
+        // Remove existing plot images from DOM
+        if (plotImageA) {
+            plotImageA.parentNode.removeChild(plotImageA);
+        }
+        if (plotImageB) {
+            plotImageB.parentNode.removeChild(plotImageB);
+        }
+        if (plotImageC) {
+            plotImageC.parentNode.removeChild(plotImageC);
+        }
+        if (plotImageD) {
+            plotImageD.parentNode.removeChild(plotImageD);
+        }
+        if (plotImageE) {
+            plotImageE.parentNode.removeChild(plotImageE);
+        }
+        if (plotImageF) {
+            plotImageF.parentNode.removeChild(plotImageF);
+        }
+        if (plotImageG) {
+            plotImageG.parentNode.removeChild(plotImageG);
+        }
+        if (plotImageH) {
+            plotImageH.parentNode.removeChild(plotImageH);
+        }
+
+        // Check the tab and create new image accordingly
+        if (tabId === 'tab1') {
+            plotImageA = document.createElement('img');
+            plotImageA.id = 'plot_image_A';
+            plotImageA.src = "{{ url_for('static', filename='CAGR.png') }}";
+            document.querySelector('.representations-container').appendChild(plotImageA);
+        } else if (tabId === 'tab2') {
+            plotImageB = document.createElement('img');
+            plotImageB.id = 'plot_image_B';
+            plotImageB.src = "{{ url_for('static', filename='Dividend_Yielded.png') }}"
+            document.querySelector('.representations-container').appendChild(plotImageB);
+        } else if (tabId === 'tab3') {
+            plotImageC = document.createElement('img');
+            plotImageC.id = 'plot_image_C';
+            plotImageC.src = "{{ url_for('static', filename='P.E Ratio.png') }}"
+            document.querySelector('.representations-container').appendChild(plotImageC);
+        } else if (tabId === 'tab4') {
+            plotImageD = document.createElement('img');
+            plotImageD.id = 'plot_image_D';
+            plotImageD.src = "{{ url_for('static', filename='GPM.png') }}"
+            document.querySelector('.representations-container').appendChild(plotImageD);
+        } else if (tabId === 'tab5') {
+            plotImageE = document.createElement('img');
+            plotImageE.id = 'plot_image_E';
+            plotImageE.src = "{{ url_for('static', filename='NetIncomeMargin.png') }}"
+            document.querySelector('.representations-container').appendChild(plotImageE);
+        } else if (tabId === 'tab6') {
+            plotImageF = document.createElement('img');
+            plotImageF.id = 'plot_image_F';
+            plotImageF.src = "{{ url_for('static', filename='EBIT_Margin.png') }}"
+            document.querySelector('.representations-container').appendChild(plotImageF);
+        } else if (tabId === 'tab7') {
+            plotImageG = document.createElement('img');
+            plotImageG.id = 'plot_image_G';
+            plotImageG.src = "{{ url_for('static', filename='EBIDTA_Margin.png') }}"
+            document.querySelector('.representations-container').appendChild(plotImageG);
+        } else if (tabId === 'tab8') {
+            plotImageH = document.createElement('img');
+            plotImageH.id = 'plot_image_H';
+            plotImageH.src = "{{ url_for('static', filename='InterestCoverageRatio.png') }}"
+            document.querySelector('.representations-container').appendChild(plotImageH);
+        }
+        // Add other conditions for tab3, tab4, ..., tab8
+
+        // Hide the loader after some delay (simulating loading time)
+        setTimeout(function () {
+            if (loader){
+                loader.style.display = 'none';
+            }
+            
+        }, 1000);
+    }
+
+    // Add click event listeners to tab links
+    document.querySelectorAll('.tab-link').forEach(function (tabLink) {
+        tabLink.addEventListener('click', function () {
+            var tabId = this.getAttribute('data-tab');
+            // Remove 'active' class from all tabs and tab links
+            document.querySelectorAll('.tab-content').forEach(function (tabContent) {
+                tabContent.classList.remove('active');
+            });
+            document.querySelectorAll('.tab-link').forEach(function (link) {
+                link.classList.remove('active');
+            });
+            // Add 'active' class to the clicked tab and link
+            document.getElementById(tabId).classList.add('active');
+            this.classList.add('active');
+    
+            // Update the image when a tab is clicked
+            updateImage(tabId);
+        });
+    });
+    
+
+    // Function to update images for all tabs
+    function updateAllImages() {
+        // Loop through all tab links and update images for each tab
+        const loader = document.getElementById('loader');
+        document.querySelectorAll('.tab-link').forEach(function (tabLink) {
+            var tabId = tabLink.getAttribute('data-tab');
+            updateImage(tabId, loader);
+        });
+    }
+    
+    // Add a click event listener to the submit button inside the form
+    document.querySelector('.user-input form').addEventListener('submit', function (event) {
+        event.preventDefault(); // Prevent form submission
+    
+        var userInput = document.getElementById('user_input_SA').value.trim();
+        if (userInput) {
+            // Disable the submit button to prevent multiple clicks
+            this.querySelector('input[type="submit"]').disabled = true;
+    
+            // Show the loading spinner
+            const loader = document.getElementById('loader');
+            loader.style.display = 'inline-block';
+    
+            // Reset all tab contents and tab links
+            document.querySelectorAll('.tab-content').forEach(function (tabContent) {
+                tabContent.classList.remove('active');
+            });
+            document.querySelectorAll('.tab-link').forEach(function (link) {
+                link.classList.remove('active');
+            });
+    
+            // Make an AJAX request to the /get_fin0lyzer_chatbot_response endpoint
+            fetch('/get_fin0lyzer_chatbot_response', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ user_input_SA: userInput })
+            })
+            .then(response => response.json())
+            .then(data => {
+              
+                // Reload the page after submitting the form
+                location.reload();
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                // Re-enable the submit button
+                this.querySelector('input[type="submit"]').disabled = false;
+                // Hide the loading spinner
+                loader.style.display = 'none';
+            });
+        }
+    });
+
+</script>
+</body>
+</html>     
