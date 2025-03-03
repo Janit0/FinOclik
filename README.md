@@ -40,7 +40,7 @@ Moreover, natural language processing is the prodigy of upcoming artificial inte
 | static  | ALl images used for UI build of FinOguider and FinOlyzer|
 | templates| All html and css file used for UI build |
 | app.py | Main coding file with all of the calulcations and connections |
-|chatbot.py| Connection coding file with UI and app.py | 
+|chatbot.py| Connection coding file between UI and app.py | 
 |conversation_history.txt| Conversation history recorder and updater for FinOguider|
 |fin0lyzer_conversation_history.txt| Conversation history recorder and updater for FinOlyzer|
 |Project Report + Deliverables| Weekly project report and deliverables provided to project advisor and mentor|
