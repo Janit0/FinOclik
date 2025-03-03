@@ -31,6 +31,7 @@ Moreover, natural language processing is the prodigy of upcoming artificial inte
 6. Web APIs (Application Programming Interfaces) 
 7. Web Development Technologies (HTML, CSS) 
 8. User Interface Design Tool (WIX)
+9. Domain Globalization (ngrok)
 
 # Files in repo: 
 
