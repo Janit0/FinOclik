@@ -23,14 +23,14 @@ Thus, here the purpose of chatbot is to resolve the financial queries and increa
 Moreover, natural language processing is the prodigy of upcoming artificial intelligence era and this project can aid the industry to move forward and accept the upcoming usage of large language models.
 
 # Technologies used: 
-o Natural Language Processing (NLP) 
-o Machine Learning (ML) 
-o Artificial Intelligence (AI) 
-o Chatbot Frameworks (Flask) 
-o Programming Languages (Python) 
-o Web APIs (Application Programming Interfaces) 
-o Web Development Technologies (HTML, CSS) 
-o User Interface Design Tool (WIX)
+1. Natural Language Processing (NLP) 
+2. Machine Learning (ML) 
+3. Artificial Intelligence (AI) 
+4. Chatbot Frameworks (Flask) 
+5. Programming Languages (Python) 
+6. Web APIs (Application Programming Interfaces) 
+7. Web Development Technologies (HTML, CSS) 
+8. User Interface Design Tool (WIX)
 
 # Files in repo: 
 
